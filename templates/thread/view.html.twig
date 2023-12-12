@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ThreadController!{% endblock %}
+
+{% block body %}
+    {{ form(form) }}
+    {% for post in posts %}
+        <div class="post" style="margin-top: 30px; padding: 20px; border-top: 1px solid #ccc;">
+            <b>{{ post.createDate | date('Y-m-d H:i:s') }}</b><br>
+            {{ post.content }}
+        </div>
+    {% endfor %}
+{% endblock %}

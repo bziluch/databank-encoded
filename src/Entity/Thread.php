@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ThreadRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,9 +37,13 @@ class Thread
     #[ORM\Column(type: Types::TEXT)]
     private ?string $tag = null;
 
+    #[ORM\OneToMany(mappedBy: 'thread', targetEntity: Post::class)]
+    private Collection $posts;
+
     public function __construct()
     {
         $this->encodeKey = bin2hex(random_bytes(12));
+        $this->posts = new ArrayCollection();
     }
 
     public function _onSave()
@@ -126,4 +132,40 @@ class Thread
     {
         return urldecode($this->tag);
     }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): static
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts->add($post);
+            $post->setThread($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): static
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getThread() === $this) {
+                $post->setThread(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFullKey(): string
+    {
+        return $this->encodeKey.self::$KEY;
+    }
+
 }
