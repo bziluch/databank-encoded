@@ -16,8 +16,15 @@ class PostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content', TextareaType::class)
-            ->add('save', SubmitType::class)
+            ->add('content', TextareaType::class, [
+                'label' => 'Post content'
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Add post',
+                'attr' => [
+                    'class' => 'btn btn-outline-light'
+                ]
+            ])
         ;
     }
 
