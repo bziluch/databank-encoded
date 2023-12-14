@@ -8,6 +8,7 @@ use App\Form\PostType;
 use App\Form\ThreadType;
 use App\Repository\PostRepository;
 use App\Repository\ThreadRepository;
+use App\Util\TransformUtil;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +60,7 @@ class ThreadController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
+            $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
             $entityManager->persist($post);
             $entityManager->flush();
         }
