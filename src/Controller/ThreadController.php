@@ -18,11 +18,26 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ThreadController extends AbstractController
 {
-    #[Route('/thread/list', name: 'app_thread')]
-    public function index(): Response
+    #[Route('/', name: 'app_home')]
+    public function home(
+        ThreadRepository $threadRepository,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response
     {
+        $entity = new Thread();
+        $form = $this->createForm(ThreadType::class, $entity);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entity->_onSave();
+            $entityManager->persist($entity);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_thread_view', ['id' => $entity->getId()]);
+        }
+        $threads = $threadRepository->findAll();
         return $this->render('thread/index.html.twig', [
-            'controller_name' => 'ThreadController',
+            'threads' => $threads,
+            'form' => $form->createView()
         ]);
     }
 
@@ -66,7 +81,7 @@ class ThreadController extends AbstractController
             $entityManager->flush();
             $form = $this->createForm(PostType::class, (new Post()));
         }
-        $posts = $postRepository->findBy([], ['createDate' => 'DESC']);
+        $posts = $postRepository->findBy(['thread' => $thread], ['createDate' => 'DESC']);
         return $this->render('thread/view.html.twig', [
             'form' => $form->createView(),
             'posts' => $posts,

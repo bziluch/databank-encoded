@@ -1,20 +1,42 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello ThreadController!{% endblock %}
+{% block page_title %}Thread list{% endblock %}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'L:/projekty_symfony/databank_encoded/src/Controller/ThreadController.php'|file_link(0) }}">src/Controller/ThreadController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'L:/projekty_symfony/databank_encoded/templates/thread/index.html.twig'|file_link(0) }}">templates/thread/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div class="form-container mb-3">
+        <p class="d-inline-flex gap-1">
+            <button class="btn btn-sm btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-form-container"
+                    aria-expanded="false" aria-controls="collapse-form-container">
+                Add new thread
+            </button>
+        </p>
+        <div class="collapse" id="collapse-form-container">
+            <div class="card card-body">
+                {{ form(form) }}
+            </div>
+        </div>
+    </div>
+    <div class="thread-list-container">
+        {% for thread in threads %}
+            <div class="row border {% if loop.last %}border-0{% else %}border-start-0 border-end-0 {% if not loop.first %}border-top-0{% endif %}{% endif %}
+                    pt-2 pb-2">
+                <div class="col-12 col-md-8">
+                    <span class="fw-semibold fs-5">{{ thread.title }}</span><br>
+                    <span class="text-muted fs-6"> Created: {{ thread.createDate | date('Y-m-d H:i:s') }}</span>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="mt-2 text-end">
+                        <a href="{{ path('app_thread_view', {'id': thread.id}) }}">
+                            <button type="button" class="btn btn-outline-success">
+                                <i class="fa-solid fa-file-pen"></i>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
