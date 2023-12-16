@@ -60,14 +60,17 @@ class ThreadController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
+            $thread->_onSave();
             $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
             $entityManager->persist($post);
             $entityManager->flush();
+            $form = $this->createForm(PostType::class, (new Post()));
         }
         $posts = $postRepository->findBy([], ['createDate' => 'DESC']);
         return $this->render('thread/view.html.twig', [
             'form' => $form->createView(),
-            'posts' => $posts
+            'posts' => $posts,
+            'thread' => $thread
         ]);
     }
 }

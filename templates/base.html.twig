@@ -14,7 +14,9 @@
         {% endblock %}
     </head>
     <body data-bs-theme="dark" class="bg-dark">
+    {{ include('parts/navbar.html.twig') }}
     <div class="container">
+        <div class="fs-4 text-muted mt-4">{% block page_title %}{% endblock %}</div>
         <div class="bg-dark border border-light-subtle rounded-1 border-1 mt-3 mb-3 p-3">
             <div class="page-content">
                 {% block body %}{% endblock %}
