@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Attachment;
 use App\Entity\Post;
 use App\Entity\Thread;
 use App\Form\PostType;
@@ -71,6 +72,7 @@ class ThreadController extends AbstractController
             throw new NotFoundHttpException('Thread not found!');
         }
         $post = (new Post())->setThread($thread);
+        $post->addAttachment((new Attachment()));
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
@@ -78,6 +80,7 @@ class ThreadController extends AbstractController
             $thread->_onSave();
             $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
             $entityManager->persist($post);
+            die();
             $entityManager->flush();
             $form = $this->createForm(PostType::class, (new Post()));
         }

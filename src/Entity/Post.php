@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,9 +33,13 @@ class Post
     #[ORM\Column(type: Types::TEXT)]
     private ?string $tag = null;
 
+    #[ORM\ManyToMany(targetEntity: Attachment::class, mappedBy: 'post')]
+    private Collection $attachments;
+
     public function __construct()
     {
         $this->createDate = new \DateTime('now');
+        $this->attachments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,5 +106,32 @@ class Post
     public function getTag(): ?string
     {
         return urldecode($this->tag);
+    }
+
+    /**
+     * @return Collection<int, Attachment>
+     */
+    public function getAttachments(): Collection
+    {
+        return $this->attachments;
+    }
+
+    public function addAttachment(Attachment $attachment): static
+    {
+        if (!$this->attachments->contains($attachment)) {
+            $this->attachments->add($attachment);
+            $attachment->addPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttachment(Attachment $attachment): static
+    {
+        if ($this->attachments->removeElement($attachment)) {
+            $attachment->removePost($this);
+        }
+
+        return $this;
     }
 }
