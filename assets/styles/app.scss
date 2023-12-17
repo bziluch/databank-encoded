@@ -13,3 +13,18 @@
     color: #ff899e;
   }
 }
+
+.post-image-container {
+  width: 250px;
+  height: 250px;
+  position: relative;
+}
+
+.post-image-container img {
+  max-width: 250px;
+  max-height: 250px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -80,7 +80,6 @@ class ThreadController extends AbstractController
             $thread->_onSave();
             $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
             $entityManager->persist($post);
-            die();
             $entityManager->flush();
             $form = $this->createForm(PostType::class, (new Post()));
         }

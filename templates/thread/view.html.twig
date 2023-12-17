@@ -15,6 +15,15 @@
                     pt-3 pb-3">
             <span class="fw-semibold">{{ post.createDate | date('Y-m-d H:i:s') }}</span><br>
             <span class="text-muted">{{ post.content | raw }}</span>
+            {% if post.attachments | length > 0 %}
+                <div class="post-attachments mt-2 mb-2">
+                    {% for attachment in post.attachments %}
+                        <div class="d-inline-block mr-2 post-image-container border">
+                            <img src="{{ attachment.contentBase64 }}" alt="{{ attachment.name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     {% endfor %}
 {% endblock %}

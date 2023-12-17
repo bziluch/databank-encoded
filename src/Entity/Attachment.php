@@ -33,7 +33,7 @@ class Attachment
     private ?string $flags = null;
 
     #[ORM\Column]
-    private ?bool $flag1 = null;
+    private ?bool $flag1 = false;
 
     #[ORM\Column(length: 255)]
     private ?string $mimeType = null;
@@ -43,6 +43,7 @@ class Attachment
 
     public function __construct()
     {
+        $this->encodeKey = bin2hex(random_bytes(12));
         $this->post = new ArrayCollection();
     }
 
@@ -77,14 +78,12 @@ class Attachment
 
     public function getName(): ?string
     {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
+        $flags = $this->getFlagsArray();
+        if (sizeof($flags) < 4) {
+            return null;
+        }
+        $cipher = "aes-128-gcm";
+        return openssl_decrypt($this->name, $cipher, $this->encodeKey.self::$KEY, $options=0, $flags[2], $flags[3]);
     }
 
     public function getContent(): ?string
@@ -92,23 +91,18 @@ class Attachment
         return $this->content;
     }
 
-    public function setContent(string $content): static
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
     public function getFlags(): ?string
     {
         return $this->flags;
     }
 
-    public function setFlags(string $flags): static
+    public function getFlagsArray(): array
     {
-        $this->flags = $flags;
-
-        return $this;
+        if (!$this->flags) {
+            return [];
+        }
+        $flags = explode(':', $this->flags);
+        return array_map(function ($el) { return urldecode($el); }, $flags);
     }
 
     public function isFlag1(): ?bool
@@ -128,35 +122,38 @@ class Attachment
         return null;
     }
 
-    private function base64_to_file( $base64_string, $output_file ) {
-        $ifp = fopen( $output_file, "wb" );
-        fwrite( $ifp, base64_decode( $base64_string) );
-        fclose( $ifp );
-        return( $output_file );
-    }
-
     public function setUploadedFile(UploadedFile $uploadedFile): static
     {
         $realPath = $uploadedFile->getRealPath();
-        $data = base64_encode(file_get_contents($realPath));
+        $content = base64_encode(file_get_contents($realPath));
         $orginalFilename = $uploadedFile->getClientOriginalName();
         $this->mimeType = $uploadedFile->getMimeType();
 
-        dump($data);
-        dump($orginalFilename);
+        $cipher = "aes-128-gcm";
 
-//        $newFile = $this->base64_to_file($file, $orginalFilename);
+        $ivlenContent = openssl_cipher_iv_length($cipher);
+        $ivContent = openssl_random_pseudo_bytes($ivlenContent);
+        $this->content = openssl_encrypt($content, $cipher, $this->encodeKey.self::$KEY, $options=0, $ivContent, $tagContent);
 
-        echo '<img src="data:'.$uploadedFile->getMimeType().';base64,' . $data . '" />';
+        $ivlenName = openssl_cipher_iv_length($cipher);
+        $ivName = openssl_random_pseudo_bytes($ivlenName);
+        $this->name = openssl_encrypt($orginalFilename, $cipher, $this->encodeKey.self::$KEY, $options=0, $ivName, $tagName);
 
+        $this->flags = implode(':', [urlencode($ivContent), urlencode($tagContent), urlencode($ivContent), urlencode($tagContent)]);
 
-//        $file = file_get_contents($realPath);
-//        dump($file);
-//        $encoded = base64_encode($file);
-
-        dd($uploadedFile);
-
+//        echo '<img src="data:'.$uploadedFile->getMimeType().';base64,' . $data . '" />';
         return $this;
+    }
+
+    public function getContentBase64(): ?string
+    {
+        $flags = $this->getFlagsArray();
+        if (sizeof($flags) < 4) {
+            return null;
+        }
+        $cipher = "aes-128-gcm";
+        $content = openssl_decrypt($this->content, $cipher, $this->encodeKey.self::$KEY, $options=0, $flags[0], $flags[1]);
+        return 'data:'.$this->mimeType.';base64,'.$content;
     }
 
     public function getMimeType(): ?string
@@ -164,22 +161,8 @@ class Attachment
         return $this->mimeType;
     }
 
-    public function setMimeType(string $mimeType): static
-    {
-        $this->mimeType = $mimeType;
-
-        return $this;
-    }
-
     public function getEncodeKey(): ?string
     {
         return $this->encodeKey;
-    }
-
-    public function setEncodeKey(string $encodeKey): static
-    {
-        $this->encodeKey = $encodeKey;
-
-        return $this;
     }
 }
