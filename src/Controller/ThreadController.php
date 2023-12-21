@@ -80,9 +80,9 @@ class ThreadController extends AbstractController
             $thread->_onSave();
             $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
             $entityManager->persist($post);
-            foreach ($form->get('attachments')->getData() as $attachment) {
+            foreach ($post->getAttachments()->toArray() as $attachment) {
                 $entityManager->persist($attachment);
-                $post->addAttachment($attachment);
+                $attachment->addPost($post);
             }
             $entityManager->flush();
             $form = $this->createForm(PostType::class, (new Post()));
