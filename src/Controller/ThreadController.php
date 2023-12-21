@@ -72,7 +72,7 @@ class ThreadController extends AbstractController
             throw new NotFoundHttpException('Thread not found!');
         }
         $post = (new Post())->setThread($thread);
-        $post->addAttachment((new Attachment()));
+//        $post->addAttachment((new Attachment()));
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
@@ -80,6 +80,10 @@ class ThreadController extends AbstractController
             $thread->_onSave();
             $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
             $entityManager->persist($post);
+            foreach ($form->get('attachments')->getData() as $attachment) {
+                $entityManager->persist($attachment);
+                $post->addAttachment($attachment);
+            }
             $entityManager->flush();
             $form = $this->createForm(PostType::class, (new Post()));
         }

@@ -33,7 +33,7 @@ class Post
     #[ORM\Column(type: Types::TEXT)]
     private ?string $tag = null;
 
-    #[ORM\ManyToMany(targetEntity: Attachment::class, mappedBy: 'post', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Attachment::class, mappedBy: 'post')]
     private Collection $attachments;
 
     public function __construct()

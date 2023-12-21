@@ -2,7 +2,10 @@
 
 {% block title %}Hello ThreadController!{% endblock %}
 
-{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% form_theme form with [
+    'bootstrap_5_layout.html.twig',
+    'parts/form/post-attachments-form-theme.html.twig'
+] %}
 
 {% block page_title %}{{ thread.title }}{% endblock %}
 
@@ -15,6 +18,7 @@
                     pt-3 pb-3">
             <span class="fw-semibold">{{ post.createDate | date('Y-m-d H:i:s') }}</span><br>
             <span class="text-muted">{{ post.content | raw }}</span>
+            {{ dump(post.attachments.toArray) }}
             {% if post.attachments | length > 0 %}
                 <div class="post-attachments mt-2 mb-2">
                     {% for attachment in post.attachments %}

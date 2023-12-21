@@ -13,7 +13,9 @@ class PostAttachmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('uploadedFile', FileType::class, []);
+            ->add('uploadedFile', FileType::class, [
+                'label' => false
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

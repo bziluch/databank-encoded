@@ -1,0 +1,18 @@
+{% block _post_attachments_row %}
+    <div class="collection-container border border-light-subtle p-2" {{ stimulus_controller('formCollection') }}>
+        Attached files:
+        <div class="collection" {{ stimulus_target('formCollection', 'collection') }} data-prototype="{{ form_widget(form.vars.prototype)|e }}"
+             data-prototype-name="__attachments__" data-index="{{ form.vars.data|length }}">
+            {% for row in form %}
+                {{ form_widget(row) }}
+            {% endfor %}
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-info" {{ stimulus_action('formCollection', 'addElement') }}>Add attachment</button>
+    </div>
+{% endblock %}
+
+{% block _post_attachments_entry_widget %}
+    <div class="collection-element">
+        {{ form_row(form) }}
+    </div>
+{% endblock %}
