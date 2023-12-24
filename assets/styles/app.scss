@@ -14,17 +14,31 @@
   }
 }
 
-.post-image-container {
+.post-image-container
+{
   width: 250px;
   height: 250px;
   position: relative;
+  overflow: hidden;
+
+  &.img-blurred
+  {
+
+    img
+    {
+      filter: blur(15px);
+    }
+  }
+
+  img
+  {
+    max-width: 250px;
+    max-height: 250px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
 }
 
-.post-image-container img {
-  max-width: 250px;
-  max-height: 250px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}

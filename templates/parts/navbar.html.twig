@@ -27,10 +27,26 @@
                     <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                 </li>
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            <div class="d-flex">
+                {% if app.user is not null %}
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome {{ app.user.username }}!</span>
+                        </li>
+                    </ul>
+                    <div>
+                        <a href="{{ path('app_logout') }}">
+                            <button type="button" class="btn btn-outline-warning"><i class="fa-regular fa-user"></i> Log out</button>
+                        </a>
+                    </div>
+                {% else %}
+                    <div>
+                        <a href="{{ path('app_login') }}">
+                            <button type="button" class="btn btn-outline-info"><i class="fa-regular fa-user"></i> Log in</button>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </nav>

@@ -35,7 +35,11 @@ class ThreadController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('app_thread_view', ['id' => $entity->getId()]);
         }
-        $threads = $threadRepository->findAll();
+        if ($this->getUser() != null) {
+            $threads = $threadRepository->findAll();
+        } else {
+            $threads = $threadRepository->findBy(['secure' => false]);
+        }
         return $this->render('thread/index.html.twig', [
             'threads' => $threads,
             'form' => $form->createView()
@@ -71,8 +75,11 @@ class ThreadController extends AbstractController
         if (!$thread) {
             throw new NotFoundHttpException('Thread not found!');
         }
+        if ($thread->isSecure() && $this->getUser() == null) {
+            $this->addFlash('warning', "You don't have access to view this thread");
+            return $this->redirectToRoute('app_home');
+        }
         $post = (new Post())->setThread($thread);
-//        $post->addAttachment((new Attachment()));
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())

@@ -21,8 +21,12 @@
             {% if post.attachments | length > 0 %}
                 <div class="post-attachments mt-2 mb-2">
                     {% for attachment in post.attachments %}
-                        <div class="d-inline-block mr-2 post-image-container border">
+                        <div class="d-inline-block mr-2 post-image-container border img-blurred" id="img-blurred-{{ attachment.id }}">
                             <img src="{{ attachment.contentBase64 }}" alt="{{ attachment.name }}">
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <button type="button" class="btn btn-outline-light" data-target="img-blurred-{{ attachment.id }}"
+                                        {{ stimulus_action('main', 'unblurImage', 'click') }}>Unblur</button>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>

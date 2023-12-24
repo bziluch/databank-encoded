@@ -40,6 +40,9 @@ class Thread
     #[ORM\OneToMany(mappedBy: 'thread', targetEntity: Post::class)]
     private Collection $posts;
 
+    #[ORM\Column]
+    private ?bool $secure = false;
+
     public function __construct()
     {
         $this->encodeKey = bin2hex(random_bytes(12));
@@ -166,6 +169,18 @@ class Thread
     public function getFullKey(): string
     {
         return $this->encodeKey.self::$KEY;
+    }
+
+    public function isSecure(): ?bool
+    {
+        return $this->secure;
+    }
+
+    public function setSecure(bool $secure): static
+    {
+        $this->secure = $secure;
+
+        return $this;
     }
 
 }
