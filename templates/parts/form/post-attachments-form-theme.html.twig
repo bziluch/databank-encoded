@@ -13,6 +13,10 @@
 
 {% block _post_attachments_entry_widget %}
     <div class="collection-element">
-        {{ form_row(form) }}
+        {% if form.vars.data is not null %}
+            {{ form_row(form.uploadedFile) }}
+        {% else %}
+            {{ form_row(form.uploadedFile, {'attr': {'required': true}}) }}
+        {% endif %}
     </div>
 {% endblock %}

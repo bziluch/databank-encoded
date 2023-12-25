@@ -122,8 +122,12 @@ class Attachment
         return null;
     }
 
-    public function setUploadedFile(UploadedFile $uploadedFile): static
+    public function setUploadedFile(?UploadedFile $uploadedFile): static
     {
+        if (!$uploadedFile) {
+            return $this;
+        }
+
         $realPath = $uploadedFile->getRealPath();
         $content = base64_encode(file_get_contents($realPath));
         $orginalFilename = $uploadedFile->getClientOriginalName();

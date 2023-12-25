@@ -16,7 +16,17 @@
     {% for post in posts %}
         <div class="post border {% if loop.last %}border-0{% else %}border-start-0 border-end-0 border-top-0{% endif %}
                     pt-3 pb-3">
-            <span class="fw-semibold">{{ post.createDate | date('Y-m-d H:i:s') }}</span><br>
+            <span class="fw-semibold">{{ post.createDate | date('Y-m-d H:i:s') }}
+                {% if post.editDate is not null %} (edited {{ post.editDate | date('Y-m-d H:i:s') }}){% endif %}
+            </span>
+            <span class="edit-button-section">
+                <a href="{{ path('app_post_edit', {'id': post.id}) }}">
+                    <button type="button" class="btn btn-sm btn-outline-warning">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </button>
+                </a>
+            </span>
+            <br>
             <span class="text-muted">{{ post.content | raw }}</span>
             {% if post.attachments | length > 0 %}
                 <div class="post-attachments mt-2 mb-2">

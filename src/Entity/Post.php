@@ -36,6 +36,9 @@ class Post
     #[ORM\ManyToMany(targetEntity: Attachment::class, mappedBy: 'post', cascade: ['persist'])]
     private Collection $attachments;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $editDate = null;
+
     public function __construct()
     {
         $this->createDate = new \DateTime('now');
@@ -131,6 +134,18 @@ class Post
         if ($this->attachments->removeElement($attachment)) {
             $attachment->removePost($this);
         }
+
+        return $this;
+    }
+
+    public function getEditDate(): ?\DateTimeInterface
+    {
+        return $this->editDate;
+    }
+
+    public function setEditDate(?\DateTimeInterface $editDate): static
+    {
+        $this->editDate = $editDate;
 
         return $this;
     }

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ThreadController!{% endblock %}
+
+{% form_theme form with [
+    'bootstrap_5_layout.html.twig',
+    'parts/form/post-attachments-form-theme.html.twig'
+] %}
+
+{% block page_title %}{{ post.thread.title }} - edit post{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    {{ form(form) }}
+</div>
+{% endblock %}

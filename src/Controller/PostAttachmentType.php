@@ -14,7 +14,8 @@ class PostAttachmentType extends AbstractType
     {
         $builder
             ->add('uploadedFile', FileType::class, [
-                'label' => false
+                'label' => false,
+                'required' => false
             ]);
     }
 
