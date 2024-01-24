@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use App\Util\Encoder\CategoryEncoder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -11,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
 {
+    private static string $KEY = 'v6U0cH7AxrF4gOCBZfwsYJjVMz9Equoe';
+    private CategoryEncoder $encoder;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,10 +38,20 @@ class Category
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Thread::class)]
     private Collection $threads;
 
+    #[ORM\Column(length: 255)]
+    private ?string $encodeKey = null;
+
     public function __construct()
     {
+        $this->encodeKey = bin2hex(random_bytes(12));
         $this->children = new ArrayCollection();
         $this->threads = new ArrayCollection();
+        $this->encoder = new CategoryEncoder($this);
+    }
+
+    public function getFullKey() : string
+    {
+        return $this->encodeKey.self::$KEY;
     }
 
     public function getId(): ?int
@@ -47,12 +61,12 @@ class Category
 
     public function getName(): ?string
     {
-        return $this->name;
+        return $this->encoder->decode();
     }
 
     public function setName(string $name): static
     {
-        $this->name = $name;
+        $this->encoder->encode($name);
 
         return $this;
     }
@@ -149,6 +163,18 @@ class Category
                 $thread->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEncodeKey(): ?string
+    {
+        return $this->encodeKey;
+    }
+
+    public function setEncodeKey(string $encodeKey): static
+    {
+        $this->encodeKey = $encodeKey;
 
         return $this;
     }
