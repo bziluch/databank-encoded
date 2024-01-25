@@ -48,6 +48,10 @@ class CategoryController extends AbstractAppController
                 return $this->redirectToRoute('app_category_list');
             }
         }
+        return $this->render($this->getFormView(), [
+            'form' => $form,
+            'entity' => $entity
+        ]);
     }
 
     #[Route('/category/edit/{id}', name: 'app_category_edit')]
