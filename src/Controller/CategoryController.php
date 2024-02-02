@@ -27,7 +27,7 @@ class CategoryController extends AbstractAppController
         return $this->render($this->getIndexView(), [
             'parentCategory' => $category,
             'categories' => $this->getEntityRepository()->findBy(['parent' => $category]),
-            'threads' => $threadRepository->findBy(['category' => $category])
+            'threads' => $threadRepository->getCategoryThreads($category)
         ]);
     }
 
