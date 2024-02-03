@@ -17,12 +17,12 @@ class CategoryEncoder extends AbstractEncoder
 
     protected function getData(): ?string
     {
-        return $this->category->getName();
+        return $this->category->getNameEncoded();
     }
 
     protected function setData(string $data): void
     {
-        $this->category->setName($data);
+        $this->category->setNameEncoded($data);
     }
 
     protected function getFlags(): ?string
