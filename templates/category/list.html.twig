@@ -1,23 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Category list{% endblock %}
-{% block page_title %}Category list{% endblock %}
+{% block title %}{% if category is not null %}{{ category.name}} - {% endif %}Categories & Threads{% endblock %}
+{% block page_title %}{% if category is not null %}{{ category.name}} - {% endif %}Categories & Threads{% endblock %}
 
 {% block actions %}
     <div class="pt-2 pb-2">
-        <a href="{{ category is defined ? path('app_subcategory_new', {'id' : category.id}) : path('app_category_new') }}">
+        <a href="{{ category is not null ? path('app_subcategory_new', {'id' : category.id}) : path('app_category_new') }}">
             <button type="button" class="btn btn-sm btn-outline-info">Add category</button>
+        </a>
+        <a href="{{ category is not null ? path('app_category_thread_add', {'categoryId' : category.id}) : path('app_thread_add') }}">
+            <button type="button" class="btn btn-sm btn-outline-info">Add thread</button>
         </a>
     </div>
 {% endblock %}
 
 {% block body %}
     <div class="category-list-container">
-        {% for category in categories %}
-            {% include 'parts/category-row.html.twig' with {last: loop.last, first: loop.first, category: category} %}
-        {% endfor %}
-        {% for thread in threads %}
-            {% include 'parts/post-row.html.twig' with {last: loop.last, first: loop.first, thread: thread} %}
-        {% endfor %}
+        {% if categories | length > 0 %}
+            <h4 class="pt-3 pb-2">Categories</h4>
+            {% for category in categories %}
+                {% include 'parts/category-row.html.twig' with {last: loop.last, first: loop.first, category: category} %}
+            {% endfor %}
+        {% endif %}
+        {% if threads | length > 0 %}
+            <h4 class="pt-3 pb-2">Threads</h4>
+            <div class="border border-2 border-light-subtle border-start-0 border-end-0">
+                {% for thread in threads %}
+                    {% include 'parts/post-row.html.twig' with {last: loop.last, first: loop.first, thread: thread} %}
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
