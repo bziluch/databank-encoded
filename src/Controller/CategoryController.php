@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\ThreadRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,6 +17,16 @@ class CategoryController extends AbstractAppController
     protected function getIndexView():     string { return 'category/list.html.twig'; }
     protected function getFormView():      string { return 'category/form.html.twig'; }
 
+    protected function routeToRedirectAfterFormSubmit($entity): ?RedirectResponse
+    {
+        /** @var $entity Category */
+        if (null !== $entity->getParent()) {
+            return $this->redirectToRoute('app_subcategory_list', ['id' => $entity->getParent()->getId()]);
+        } else {
+            return $this->redirectToRoute('app_category_list');
+        }
+    }
+
     #[Route('/category/list/', name: 'app_category_list')]
     #[Route('/category/list/{id}', name: 'app_subcategory_list')]
     public function list(
@@ -26,7 +37,7 @@ class CategoryController extends AbstractAppController
         $category = $this->getEntityRepository()->find($id);
         return $this->render($this->getIndexView(), [
             'category' => $category,
-            'categories' => $this->getEntityRepository()->findBy(['parent' => $category]),
+            'categories' => $this->getEntityRepository()->getCategorySubcategories($category),
             'threads' => $threadRepository->getCategoryThreads($category)
         ]);
     }
