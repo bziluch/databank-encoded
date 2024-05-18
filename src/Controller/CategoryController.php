@@ -25,14 +25,14 @@ class CategoryController extends AbstractAppController
     {
         $category = $this->getEntityRepository()->find($id);
         return $this->render($this->getIndexView(), [
-            'category' => $category,
+            'parentCategory' => $category,
             'categories' => $this->getEntityRepository()->findBy(['parent' => $category]),
             'threads' => $threadRepository->getCategoryThreads($category)
         ]);
     }
 
-    #[Route('/category/new/{id}', name: 'app_subcategory_new')]
-    #[Route('/category/new/', name: 'app_category_new')]
+    #[Route('/category/new/{id}', name: 'app_category_new')]
+    #[Route('/category/new/', name: 'app_subcategory_new')]
     public function new(Request $request, int $id = 0) : Response
     {
         $entity = (new Category())

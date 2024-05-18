@@ -1,4 +1,4 @@
-<div class="row border border-start-0 border-end-0 border-bottom-0 {% if first %}border-top-0{% endif %} pt-2 pb-2">
+<div class="row border {% if last %}border-0{% else %}border-start-0 border-end-0 {% if not first %}border-top-0{% endif %}{% endif %}pt-2 pb-2">
     <div class="col-12 col-md-8">
         <span class="fw-semibold fs-5">{{ category.name }}</span>
         {% if category.secure %}<span class="badge text-bg-info ms-1"><i class="fa-solid fa-lock"></i> Secure</span>{% endif %}
@@ -8,11 +8,6 @@
             <a href="{{ path('app_category_edit', {'id': category.id}) }}">
                 <button type="button" class="btn btn-outline-success">
                     <i class="fa-solid fa-file-pen"></i>
-                </button>
-            </a>
-            <a href="{{ path('app_subcategory_list', {'id': category.id}) }}">
-                <button type="button" class="btn btn-outline-info">
-                    <i class="fa-solid fa-eye"></i>
                 </button>
             </a>
         </div>

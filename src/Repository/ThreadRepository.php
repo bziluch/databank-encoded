@@ -28,15 +28,9 @@ class ThreadRepository extends ServiceEntityRepository
 
     public function getCategoryThreads(?Category $category)
     {
-        $qb = $this->createQueryBuilder('t');
-        if ($category) {
-            $qb
-                ->andWhere('t.category = :category')
-                ->setParameter('category', $category);
-        } else {
-            $qb
-                ->andWhere('t.category IS NULL');
-        }
+        $qb = $this->createQueryBuilder('t')
+            ->andWhere('t.category = :category')
+            ->setParameter('category', $category);
         if (!$this->security->getUser()) {
             $qb->andWhere('t.secure = 0 OR t.secure IS NULL');
         }
