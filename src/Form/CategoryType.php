@@ -16,9 +16,7 @@ class CategoryType extends AbstractType
     {
         $builder
             ->add('name', TextType::class)
-            ->add('secure', CheckboxType::class, [
-                'required' => false
-            ])
+            ->add('secure', CheckboxType::class)
             ->add('save', SubmitType::class)
         ;
     }

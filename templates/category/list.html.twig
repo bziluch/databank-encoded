@@ -13,9 +13,6 @@
 
 {% block body %}
     <div class="category-list-container">
-        {% for category in categories %}
-            {% include 'parts/category-row.html.twig' with {last: loop.last, first: loop.first, category: category} %}
-        {% endfor %}
         {% for thread in threads %}
             {% include 'parts/post-row.html.twig' with {last: loop.last, first: loop.first, thread: thread} %}
         {% endfor %}

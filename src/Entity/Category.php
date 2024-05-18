@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Category
 {
     private static string $KEY = 'v6U0cH7AxrF4gOCBZfwsYJjVMz9Equoe';
-    private ?CategoryEncoder $encoder = null;
+    private CategoryEncoder $encoder;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -46,15 +46,7 @@ class Category
         $this->encodeKey = bin2hex(random_bytes(12));
         $this->children = new ArrayCollection();
         $this->threads = new ArrayCollection();
-        $this->initializeEncoder();
-    }
-
-    private function initializeEncoder()
-    {
-        if (!$this->encoder)
-        {
-            $this->encoder = new CategoryEncoder($this);
-        }
+        $this->encoder = new CategoryEncoder($this);
     }
 
     public function getFullKey() : string
@@ -67,27 +59,13 @@ class Category
         return $this->id;
     }
 
-    public function getNameEncoded(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setNameEncoded(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
     public function getName(): ?string
     {
-        $this->initializeEncoder();
         return $this->encoder->decode();
     }
 
     public function setName(string $name): static
     {
-        $this->initializeEncoder();
         $this->encoder->encode($name);
 
         return $this;
