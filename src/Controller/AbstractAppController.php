@@ -32,7 +32,7 @@ abstract class AbstractAppController extends AbstractController
     }
 
     public function __construct(
-        protected readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     public function index() : Response
