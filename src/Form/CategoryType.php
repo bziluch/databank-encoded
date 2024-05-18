@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Category;
+use App\Trait\UserProviderTrait;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -13,20 +15,33 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CategoryType extends AbstractType
 {
+    use UserProviderTrait;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name', TextType::class)
-            ->add('secure', CheckboxType::class, [
-                'required' => false
-            ]);
+        $user = $this->getUser();
+
+        $builder->add('name', TextType::class);
+        if (null !== $this->getUser()) {
+            $builder
+                ->add('secure', CheckboxType::class, [
+                    'required' => false
+                ]);
+        }
 
         if (null !== $builder->getData()?->getId()) {
             $builder
                 ->add('parent', EntityType::class, [
                     'class' => Category::class,
                     'required' => false,
-                    'placeholder' => '-- Select category --'
+                    'placeholder' => '-- Select category --',
+                    'query_builder' => function (EntityRepository $er) use ($user) {
+                        $qb = $er->createQueryBuilder('c');
+                        if (null === $user) {
+                            $qb->andWhere('c.secure = 0 OR c.secure IS NULL');
+                        }
+                        return $qb;
+                    }
                 ]);
         }
 
