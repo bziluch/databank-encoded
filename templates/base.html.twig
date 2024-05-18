@@ -32,8 +32,9 @@
                 {{ message }}
             </div>
         {% endfor %}
-        <div class="bg-dark border border-light-subtle rounded-1 border-1 mt-3 mb-3 p-3">
-            <div class="page-content">
+        <div class="bg-dark border border-light-subtle rounded-1 border-1 mt-3 mb-3">
+            <div class="page-actions ps-3 pe-3 bg-dark-subtle">{% block actions %}{% endblock %}</div>
+            <div class="page-content p-3">
                 {% block body %}{% endblock %}
             </div>
         </div>

@@ -21,24 +21,7 @@
     </div>
     <div class="thread-list-container">
         {% for thread in threads %}
-            <div class="row border {% if loop.last %}border-0{% else %}border-start-0 border-end-0 {% if not loop.first %}border-top-0{% endif %}{% endif %}
-                    pt-2 pb-2">
-                <div class="col-12 col-md-8">
-                    <span class="fw-semibold fs-5">{{ thread.title }}</span>
-                    {% if thread.secure %}<span class="badge text-bg-info ms-1"><i class="fa-solid fa-lock"></i> Secure</span>{% endif %}
-                    <br>
-                    <span class="text-muted fs-6"> Created: {{ thread.createDate | date('Y-m-d H:i:s') }}</span>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="mt-2 text-end">
-                        <a href="{{ path('app_thread_view', {'id': thread.id}) }}">
-                            <button type="button" class="btn btn-outline-success">
-                                <i class="fa-solid fa-file-pen"></i>
-                            </button>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            {% include 'parts/thread-row.html.twig' with {last: loop.last, first: loop.first, thread: thread} %}
         {% endfor %}
     </div>
 {% endblock %}
