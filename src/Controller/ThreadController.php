@@ -75,7 +75,6 @@ class ThreadController extends AbstractController
             $entity->_onSave();
             $entityManager->persist($entity);
             $entityManager->flush();
-            return $this->redirectToRoute('app_thread_view', ['id' => $entity->getId()]);
         }
         return $this->render('thread/form.html.twig', [
             'form' => $form->createView(),

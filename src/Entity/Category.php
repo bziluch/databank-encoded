@@ -41,11 +41,6 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $encodeKey = null;
 
-    public function __toString(): string
-    {
-        return $this->getName();
-    }
-
     public function __construct()
     {
         $this->encodeKey = bin2hex(random_bytes(12));
