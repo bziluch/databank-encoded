@@ -43,7 +43,7 @@ class PostController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-            $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
+            // TODO: do edit date on entity listeners
             $post->setEditDate(new \DateTime('now'));
             $entityManager->persist($post);
             foreach ($post->getAttachments()->toArray() as $attachment) {
