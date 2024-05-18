@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Category>
@@ -17,28 +16,9 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 class CategoryRepository extends ServiceEntityRepository
 {
-    public function __construct(
-        private readonly Security $security,
-        ManagerRegistry $registry
-    ) {
-        parent::__construct($registry, Category::class);
-    }
-
-    public function getCategorySubcategories(?Category $category)
+    public function __construct(ManagerRegistry $registry)
     {
-        $qb = $this->createQueryBuilder('c');
-        if ($category) {
-            $qb
-                ->andWhere('c.parent = :category')
-                ->setParameter('category', $category);
-        } else {
-            $qb
-                ->andWhere('c.parent IS NULL');
-        }
-        if (!$this->security->getUser()) {
-            $qb->andWhere('c.secure = 0 OR c.secure IS NULL');
-        }
-        return $qb->getQuery()->getResult();
+        parent::__construct($registry, Category::class);
     }
 
 //    /**

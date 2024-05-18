@@ -11,6 +11,11 @@
         <a href="{{ category is not null ? path('app_category_thread_add', {'categoryId' : category.id}) : path('app_thread_add') }}">
             <button type="button" class="btn btn-sm btn-outline-info">Add thread</button>
         </a>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="category-list-container">
         {% if category is not null %}
             {% if category.parent is not null %}
                 <a href="{{ path('app_subcategory_list', {'id': category.parent.id}) }}" class="btn btn-outline-warning btn-sm">Back to {{ category.parent }}</a>
@@ -18,11 +23,6 @@
                 <a href="{{ path('app_category_list') }}" class="btn btn-outline-warning btn-sm">Back to category list</a>
             {% endif %}
         {% endif %}
-    </div>
-{% endblock %}
-
-{% block body %}
-    <div class="category-list-container">
         {% if categories | length > 0 %}
             <h4 class="pt-3 pb-2">Categories</h4>
             {% for category in categories %}
