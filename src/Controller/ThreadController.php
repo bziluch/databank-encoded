@@ -75,12 +75,6 @@ class ThreadController extends AbstractController
             $entity->_onSave();
             $entityManager->persist($entity);
             $entityManager->flush();
-            if ($form->get('saveAndReturn')->isClicked()) {
-                if (null !== $entity->getCategory()) {
-                    return $this->redirectToRoute('app_subcategory_list', ['id' => $entity->getCategory()->getId()]);
-                }
-                return $this->redirectToRoute('app_category_list');
-            }
             return $this->redirectToRoute('app_thread_view', ['id' => $entity->getId()]);
         }
         return $this->render('thread/form.html.twig', [

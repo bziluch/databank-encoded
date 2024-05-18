@@ -33,7 +33,7 @@
             <h4 class="pt-3 pb-2">Threads</h4>
             <div class="border border-2 border-light-subtle border-start-0 border-end-0">
                 {% for thread in threads %}
-                    {% include 'parts/thread-row.html.twig' with {last: loop.last, first: loop.first, thread: thread} %}
+                    {% include 'parts/post-row.html.twig' with {last: loop.last, first: loop.first, thread: thread} %}
                 {% endfor %}
             </div>
         {% endif %}
