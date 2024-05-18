@@ -12,7 +12,7 @@ class CategoryEncoder extends AbstractEncoder
 
     protected function getKey(): string
     {
-        return $this->category->getFullKey();
+        return $this->category->getEncodeKey().Category::$KEY;
     }
 
     protected function getData(): ?string
