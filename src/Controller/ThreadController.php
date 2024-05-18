@@ -7,7 +7,6 @@ use App\Entity\Post;
 use App\Entity\Thread;
 use App\Form\PostType;
 use App\Form\ThreadType;
-use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Repository\ThreadRepository;
 use App\Util\TransformUtil;
@@ -47,41 +46,16 @@ class ThreadController extends AbstractController
         ]);
     }
 
-    #[Route('/thread/add', name: 'app_thread_add')]
-    #[Route('/thread/edit/{id}', name: 'app_thread_edit')]
-    #[Route('/category/{categoryId}/thread/add', name: 'app_category_thread_add')]
-    public function form(
-        ThreadRepository $threadRepository,
-        CategoryRepository $categoryRepository,
-        EntityManagerInterface $entityManager,
-        Request $request,
-        int $categoryId = 0,
-        int $id = null
-    ): Response
+    #[Route('/thread/form', name: 'app_thread_form')]
+    public function form(EntityManagerInterface $entityManager, Request $request): Response
     {
-        if ($id) {
-            $entity = $threadRepository->find($id);
-            if (!$entity) {
-                throw new NotFoundHttpException('Thread not found');
-            }
-        } else {
-            $category = $categoryRepository->find($categoryId);
-            $entity = (new Thread())
-                ->setCategory($category);
-        }
+        $entity = new Thread();
         $form = $this->createForm(ThreadType::class, $entity);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entity->_onSave();
             $entityManager->persist($entity);
             $entityManager->flush();
-            if ($form->get('saveAndReturn')->isClicked()) {
-                if (null !== $entity->getCategory()) {
-                    return $this->redirectToRoute('app_subcategory_list', ['id' => $entity->getCategory()->getId()]);
-                }
-                return $this->redirectToRoute('app_category_list');
-            }
-            return $this->redirectToRoute('app_thread_view', ['id' => $entity->getId()]);
         }
         return $this->render('thread/form.html.twig', [
             'form' => $form->createView(),

@@ -43,9 +43,6 @@ class Thread
     #[ORM\Column]
     private ?bool $secure = false;
 
-    #[ORM\ManyToOne(inversedBy: 'threads')]
-    private ?Category $category = null;
-
     public function __construct()
     {
         $this->encodeKey = bin2hex(random_bytes(12));
@@ -182,18 +179,6 @@ class Thread
     public function setSecure(bool $secure): static
     {
         $this->secure = $secure;
-
-        return $this;
-    }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): static
-    {
-        $this->category = $category;
 
         return $this;
     }
