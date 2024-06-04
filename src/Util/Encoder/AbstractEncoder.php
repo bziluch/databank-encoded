@@ -4,6 +4,17 @@ namespace App\Util\Encoder;
 
 abstract class AbstractEncoder
 {
+    /*
+     * TODO:    Create entity which will have content, key and other things necessary for encoding
+     * TODO:    Create abstract entity with non-database field, which will be extended by entity mentioned above
+     * TODO:    Move this to service, and add loading keys from env.
+     * TODO:    Process entire encoding/decoding on events (onLoad and preFlush/postPersist)
+     * TODO:    Create database copy, then create migration only for new fields and relations
+     * TODO:    Create command for rewriting whole thing (decoding using old key, write to new entity, check if contents are the same compared to old)
+     * TODO:    Create migration with condition (execute only if new fields are already rewrote)
+     * TODO:    Adjust getters and setters to new content
+     */
+
     private ?string $dataDecoded = null;
     private string $cipher = "aes-128-gcm";
 
