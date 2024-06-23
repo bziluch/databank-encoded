@@ -22,10 +22,10 @@ class EncryptableString
     private ?string $contentKey = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $iv = null;
+    private ?string $iv = '';
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $tag = null;
+    private ?string $tag = '';
 
     public function getId(): ?int
     {
@@ -58,24 +58,24 @@ class EncryptableString
 
     public function getIv(): ?string
     {
-        return $this->iv;
+        return urldecode($this->iv);
     }
 
     public function setIv(string $iv): static
     {
-        $this->iv = $iv;
+        $this->iv = urlencode($iv);
 
         return $this;
     }
 
     public function getTag(): ?string
     {
-        return $this->tag;
+        return urldecode($this->tag);
     }
 
     public function setTag(string $tag): static
     {
-        $this->tag = $tag;
+        $this->tag = urlencode($tag);
 
         return $this;
     }
