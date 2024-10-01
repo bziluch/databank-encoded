@@ -17,18 +17,32 @@ class EncryptionService
         $ivLen = openssl_cipher_iv_length($this->cipher);
         $encryptableString->setIv(openssl_random_pseudo_bytes($ivLen));
 
-        //key missing
+        $encryptableString->setContent(openssl_encrypt(
+            $encryptableString->getContentRaw(),
+            $this->cipher,
+            $this->keyPrefix . $encryptableString->getContentKey(),
+            0,
+            $encryptableString->getIv(),
+            $tag
+        ));
 
-        $this->setData(openssl_encrypt($this->dataDecoded, $this->cipher, $this->getKey(), 0, $iv, $tag));
-        $this->setFlags(implode(':', [urlencode($iv), urlencode($tag)]));
+        $encryptableString->setTag($tag);
     }
 
-    public function decode() : ?string
+    public function decrypt(EncryptableString $encryptableString) : void
     {
-        if ($this->dataDecoded) return $this->dataDecoded;
-        if (!$this->getData()) return null;
-        $this->dataDecoded = openssl_decrypt($this->getData(), $this->cipher, $this->getKey(), $options=0, $this->getFlagsArray()[0], $this->getFlagsArray()[1]);
-        return $this->dataDecoded;
+        if (null !== $encryptableString->getContentRaw() || null === $encryptableString->getContent()) {
+            return;
+        }
+
+        $encryptableString->setContentRaw(openssl_decrypt(
+            $encryptableString->getContentRaw(),
+            $this->cipher,
+            $this->keyPrefix . $encryptableString->getContentKey(),
+            0,
+            $encryptableString->getIv(),
+            $encryptableString->getTag()
+        ));
     }
 
 }

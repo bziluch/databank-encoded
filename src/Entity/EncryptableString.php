@@ -19,13 +19,20 @@ class EncryptableString
     private ?string $contentRaw = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $contentKey = null;
+    private ?string $contentKey;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $iv = '';
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $tag = '';
+
+    private bool $edited = false;
+
+    public function __construct()
+    {
+        $this->contentKey = bin2hex(random_bytes(12));
+    }
 
     public function getId(): ?int
     {
@@ -88,7 +95,13 @@ class EncryptableString
     public function setContentRaw(string $contentRaw): static
     {
         $this->contentRaw = $contentRaw;
+        $this->edited = true;
 
         return $this;
+    }
+
+    public function isEdited(): bool
+    {
+        return $this->edited;
     }
 }
