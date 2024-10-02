@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Abstract\DateLoggableEntity;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
-class Post
+class Post extends DateLoggableEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,13 +21,6 @@ class Post
     #[ORM\JoinColumn(nullable: false)]
     private ?Thread $thread = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createDate = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $content = null;
-    private ?string $content_decrypted_ = null;
-
     #[ORM\Column(type: Types::TEXT)]
     private ?string $iv = null;
 
@@ -36,12 +30,14 @@ class Post
     #[ORM\ManyToMany(targetEntity: Attachment::class, mappedBy: 'post', cascade: ['persist'])]
     private Collection $attachments;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $editDate = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private EncryptableString $content;
 
     public function __construct()
     {
-        $this->createDate = new \DateTime('now');
+        $this->content = new EncryptableString();
         $this->attachments = new ArrayCollection();
     }
 
@@ -62,53 +58,16 @@ class Post
         return $this;
     }
 
-    public function getCreateDate(): ?\DateTimeInterface
-    {
-        return $this->createDate;
-    }
-
-    public function setCreateDate(\DateTimeInterface $createDate): static
-    {
-        $this->createDate = $createDate;
-
-        return $this;
-    }
-
     public function getContent(): ?string
     {
-        if ($this->content_decrypted_)
-        {
-            return $this->content_decrypted_;
-        }
-        if (!$this->content)
-        {
-            return null;
-        }
-        $cipher = "aes-128-gcm";
-        $this->content_decrypted_ = openssl_decrypt($this->content, $cipher, $this->thread->getEncodeKey(), $options=0, $this->getIv(), $this->getTag());
-        return $this->content_decrypted_;
+        return $this->getContentObj()->getContentRaw();
     }
 
     public function setContent(string $content): static
     {
-        $this->content_decrypted_ = $content;
-        $cipher = "aes-128-gcm";
-        $ivlen = openssl_cipher_iv_length($cipher);
-        $this->iv = openssl_random_pseudo_bytes($ivlen);
-        $this->content = openssl_encrypt($content, $cipher, $this->thread->getEncodeKey(), $options=0, $this->iv, $this->tag);
-        $this->iv = urlencode($this->iv);
-        $this->tag = urlencode($this->tag);
+        $this->getContentObj()->setContentRaw($content);
+
         return $this;
-    }
-
-    public function getIv(): ?string
-    {
-        return urldecode($this->iv);
-    }
-
-    public function getTag(): ?string
-    {
-        return urldecode($this->tag);
     }
 
     /**
@@ -138,15 +97,8 @@ class Post
         return $this;
     }
 
-    public function getEditDate(): ?\DateTimeInterface
+    public function getContentObj(): EncryptableString
     {
-        return $this->editDate;
-    }
-
-    public function setEditDate(?\DateTimeInterface $editDate): static
-    {
-        $this->editDate = $editDate;
-
-        return $this;
+        return $this->content;
     }
 }
