@@ -21,12 +21,6 @@ class Post extends DateLoggableEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?Thread $thread = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $iv = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $tag = null;
-
     #[ORM\ManyToMany(targetEntity: Attachment::class, mappedBy: 'post', cascade: ['persist'])]
     private Collection $attachments;
 
@@ -97,7 +91,7 @@ class Post extends DateLoggableEntity
         return $this;
     }
 
-    public function getContentObj(): EncryptableString
+    private function getContentObj(): EncryptableString
     {
         return $this->content;
     }
