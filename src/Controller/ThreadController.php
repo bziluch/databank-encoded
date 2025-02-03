@@ -109,6 +109,7 @@ class ThreadController extends AbstractController
         if ($form->isSubmitted() && $form->isValid())
         {
             $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
+            $post->_onSave();
             $entityManager->persist($post);
             foreach ($post->getAttachments()->toArray() as $attachment) {
                 $entityManager->persist($attachment);

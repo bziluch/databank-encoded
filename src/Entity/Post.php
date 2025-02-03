@@ -2,16 +2,17 @@
 
 namespace App\Entity;
 
-use App\Entity\Abstract\DateLoggableEntity;
 use App\Repository\PostRepository;
+use App\Trait\DataLoggableEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
-class Post extends DateLoggableEntity
+class Post
 {
+    use DataLoggableEntityTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
