@@ -3,8 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Post;
-use App\Entity\Thread;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -17,7 +16,7 @@ class PostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content', TextareaType::class, [
+            ->add('content', CKEditorType::class, [
                 'label' => 'Post content'
             ])
             ->add('attachments', CollectionType::class, [

@@ -43,7 +43,6 @@ class PostController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-            $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
             $entityManager->persist($post);
             foreach ($post->getAttachments()->toArray() as $attachment) {
                 $entityManager->persist($attachment);
