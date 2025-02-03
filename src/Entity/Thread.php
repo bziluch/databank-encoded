@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Abstract\DateLoggableEntity;
 use App\Repository\ThreadRepository;
+use App\Trait\DataLoggableEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ThreadRepository::class)]
 class Thread extends DateLoggableEntity
 {
+    use DataLoggableEntityTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
