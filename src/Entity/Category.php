@@ -22,12 +22,12 @@ class Category
     private Collection $children;
 
     #[ORM\Column]
-    private ?bool $secure = null;
+    private ?bool $secure = false;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Thread::class)]
     private Collection $threads;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private EncryptableString $name;
 

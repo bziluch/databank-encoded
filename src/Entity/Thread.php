@@ -25,7 +25,7 @@ class Thread extends DateLoggableEntity
     #[ORM\ManyToOne(inversedBy: 'threads')]
     private ?Category $category = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private EncryptableString $title;
 

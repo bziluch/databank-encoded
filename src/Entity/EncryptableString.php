@@ -56,13 +56,6 @@ class EncryptableString
         return $this->contentKey;
     }
 
-    public function setContentKey(string $contentKey): static
-    {
-        $this->contentKey = $contentKey;
-
-        return $this;
-    }
-
     public function getIv(): ?string
     {
         return urldecode($this->iv);

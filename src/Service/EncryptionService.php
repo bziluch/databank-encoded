@@ -36,7 +36,7 @@ class EncryptionService
         }
 
         $encryptableString->setContentRaw(openssl_decrypt(
-            $encryptableString->getContentRaw(),
+            $encryptableString->getContent(),
             $this->cipher,
             $this->keyPrefix . $encryptableString->getContentKey(),
             0,

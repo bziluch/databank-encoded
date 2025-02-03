@@ -24,8 +24,7 @@ class Post extends DateLoggableEntity
     #[ORM\ManyToMany(targetEntity: Attachment::class, mappedBy: 'post', cascade: ['persist'])]
     private Collection $attachments;
 
-
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private EncryptableString $content;
 

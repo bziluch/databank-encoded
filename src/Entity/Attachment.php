@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\AttachmentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -20,24 +19,21 @@ class Attachment
     #[ORM\ManyToMany(targetEntity: Post::class, inversedBy: 'attachments')]
     private Collection $post;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $name = null;
-
     #[ORM\Column(length: 255)]
     private ?string $mimeType = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
-    private EncryptableString $content2;
+    private EncryptableString $content;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
-    private EncryptableString $name2;
+    private EncryptableString $name;
 
     public function __construct()
     {
-        $this->content2 = new EncryptableString();
-        $this->name2 = new EncryptableString();
+        $this->content = new EncryptableString();
+        $this->name = new EncryptableString();
 
         $this->post = new ArrayCollection();
     }
@@ -116,11 +112,11 @@ class Attachment
 
     private function getContentObj(): EncryptableString
     {
-        return $this->content2;
+        return $this->content;
     }
 
     private function getNameObj(): EncryptableString
     {
-        return $this->name2;
+        return $this->name;
     }
 }
