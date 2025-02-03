@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Abstract\DateLoggableEntity;
 use App\Repository\PostRepository;
 use App\Trait\DataLoggableEntityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
-class Post
+class Post extends DateLoggableEntity
 {
     use DataLoggableEntityTrait;
 
