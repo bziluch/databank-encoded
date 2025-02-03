@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Controller\PostAttachmentType;
 use App\Entity\Post;
 use App\Entity\Thread;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

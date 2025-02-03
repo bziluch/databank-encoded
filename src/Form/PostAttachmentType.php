@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Form;
 
 use App\Entity\Attachment;
 use Symfony\Component\Form\AbstractType;

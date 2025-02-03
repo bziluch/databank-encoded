@@ -9,6 +9,20 @@
 
 {% block page_title %}{{ thread.title }}{% endblock %}
 
+{% block actions %}
+    <div class="pt-2 pb-2">
+        {% if thread.category is not null %}
+            <a href="{{ path('app_subcategory_list', {'id' : thread.category.id}) }}">
+                <button type="button" class="btn btn-sm btn-outline-warning">Back to category</button>
+            </a>
+        {% else %}
+            <a href="{{ path('app_category_list') }}">
+                <button type="button" class="btn btn-sm btn-outline-warning">Back to category</button>
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}
+
 {% block body %}
     <div class="form-container">
         {{ form(form) }}
@@ -17,7 +31,7 @@
         <div class="post border {% if loop.last %}border-0{% else %}border-start-0 border-end-0 border-top-0{% endif %}
                     pt-3 pb-3">
             <span class="fw-semibold">{{ post.createDate | date('Y-m-d H:i:s') }}
-                {% if post.editDate is not null %} (edited {{ post.editDate | date('Y-m-d H:i:s') }}){% endif %}
+                {% if post.updateDate is not null %} (edited {{ post.updateDate | date('Y-m-d H:i:s') }}){% endif %}
             </span>
             <span class="edit-button-section">
                 <a href="{{ path('app_post_edit', {'id': post.id}) }}">
