@@ -31,7 +31,6 @@ class ThreadController extends AbstractController
         $form = $this->createForm(ThreadType::class, $entity);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity->_onSave();
             $entityManager->persist($entity);
             $entityManager->flush();
             return $this->redirectToRoute('app_thread_view', ['id' => $entity->getId()]);
@@ -72,7 +71,6 @@ class ThreadController extends AbstractController
         $form = $this->createForm(ThreadType::class, $entity);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity->_onSave();
             $entityManager->persist($entity);
             $entityManager->flush();
             if ($form->get('saveAndReturn')->isClicked()) {
@@ -110,7 +108,6 @@ class ThreadController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-            $thread->_onSave();
             $post->setContent(TransformUtil::findAndReplaceLinks($post->getContent()));
             $entityManager->persist($post);
             foreach ($post->getAttachments()->toArray() as $attachment) {

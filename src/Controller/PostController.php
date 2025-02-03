@@ -43,8 +43,6 @@ class PostController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-            // TODO: do edit date on entity listeners
-            $post->setEditDate(new \DateTime('now'));
             $entityManager->persist($post);
             foreach ($post->getAttachments()->toArray() as $attachment) {
                 $entityManager->persist($attachment);
